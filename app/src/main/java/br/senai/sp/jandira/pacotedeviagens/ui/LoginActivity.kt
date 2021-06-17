@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.pacotedeviagens.ui
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -73,9 +74,21 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             val usuario = task.getResult(ApiException::class.java)
             if (usuario != null){
-                Log.d("xpto", usuario.displayName.toString())
-                Log.d("xpto", usuario.email.toString())
-                Log.d("xpto", usuario.photoUrl.toString())
+                val dadosUsuario = getSharedPreferences("dados_usuario", Context.MODE_PRIVATE)
+                val editor = dadosUsuario.edit()
+
+                editor.putString("display_name", usuario.displayName)
+                editor.putString("email", usuario.email)
+                editor.putString("url_photo", usuario.photoUrl.toString())
+                editor.putString("id", usuario.id)
+
+                editor.apply()
+
+                updateUI()
+
+//                Log.d("xpto", usuario.displayName.toString())
+//                Log.d("xpto", usuario.email.toString())
+//                Log.d("xpto", usuario.photoUrl.toString())
             }
         }
     }
